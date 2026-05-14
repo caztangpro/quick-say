@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Quick Say app icon</title>
+  <desc id="desc">A rounded microphone mark for the Quick Say desktop app.</desc>
+  <defs>
+    <linearGradient id="mark-gradient" x1="74" y1="56" x2="438" y2="456" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0f8b7a"/>
+      <stop offset="0.58" stop-color="#365f9d"/>
+      <stop offset="1" stop-color="#c56f2f"/>
+    </linearGradient>
+    <filter id="soft-shadow" x="0" y="0" width="512" height="512" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="22" stdDeviation="18" flood-color="#172027" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="#f8fafb"/>
+  <g filter="url(#soft-shadow)">
+    <rect x="76" y="64" width="360" height="360" rx="92" fill="url(#mark-gradient)"/>
+    <path d="M256 123c53.019 0 96 42.981 96 96v50c0 53.019-42.981 96-96 96s-96-42.981-96-96v-50c0-53.019 42.981-96 96-96Z" fill="#fff" opacity="0.96"/>
+    <path d="M204 219c0-28.719 23.281-52 52-52s52 23.281 52 52v54c0 28.719-23.281 52-52 52s-52-23.281-52-52v-54Z" fill="#0f8b7a"/>
+    <path d="M139 256c0 65.17 52.83 118 118 118s118-52.83 118-118" fill="none" stroke="#fff" stroke-width="24" stroke-linecap="round"/>
+    <path d="M256 376v39" stroke="#fff" stroke-width="24" stroke-linecap="round"/>
+    <path d="M201 417h110" stroke="#fff" stroke-width="24" stroke-linecap="round"/>
+  </g>
+</svg>

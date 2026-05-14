@@ -121,6 +121,7 @@ function App() {
   const statusRef = useRef(status);
   const apiKeyRef = useRef(apiKey);
   const hasApiKeyRef = useRef(hasApiKey);
+  const capturingHotkeyRef = useRef(capturingHotkey);
   const hotkeyButtonRef = useRef<HTMLButtonElement>(null);
 
   const locale = useMemo(() => getMessages(settings.uiLanguage), [settings.uiLanguage]);
@@ -133,6 +134,7 @@ function App() {
   const hasCredential = hasApiKey || apiKey.trim().length > 0;
   const isDarkMode = settings.themeMode === "dark";
   const isProcessing = status === "transcribing" || status === "polishing";
+  const isCancellable = status === "recording" || isProcessing;
   const themeToggleLabel = isDarkMode ? locale.ui.switchToLightMode : locale.ui.switchToDarkMode;
   const voiceStyle = getVoiceStyle(status, voiceLevel);
   const voiceIntensityValue = getVoiceIntensityValue(status, voiceLevel, locale);
@@ -149,7 +151,8 @@ function App() {
     statusRef.current = status;
     apiKeyRef.current = apiKey;
     hasApiKeyRef.current = hasApiKey;
-  }, [apiKey, hasApiKey, status]);
+    capturingHotkeyRef.current = capturingHotkey;
+  }, [apiKey, capturingHotkey, hasApiKey, status]);
 
   useEffect(() => {
     document.documentElement.lang = settings.uiLanguage === "zh" ? "zh-CN" : "en";
@@ -207,6 +210,11 @@ function App() {
         setVoiceLevel(0);
         setMessage({ text: event.payload });
       }),
+      listen("dictation_cancelled", () => {
+        setStatus("idle");
+        setVoiceLevel(0);
+        setMessage({ key: "recordingCancelled" });
+      }),
       listen<number>("voice_level", (event) => {
         setVoiceLevel(Math.max(0, Math.min(1, event.payload)));
       }),
@@ -224,6 +232,24 @@ function App() {
       });
     };
   }, [isVoiceOverlay]);
+
+  useEffect(() => {
+    function handleEscape(event: globalThis.KeyboardEvent) {
+      if (event.key !== "Escape" || capturingHotkeyRef.current) {
+        return;
+      }
+
+      if (!["recording", "transcribing", "polishing"].includes(statusRef.current)) {
+        return;
+      }
+
+      event.preventDefault();
+      void handleCancel();
+    }
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, []);
 
   async function handleHotkeyToggle() {
     try {
@@ -243,6 +269,13 @@ function App() {
 
       await startRecording();
     } catch (error) {
+      if (isCancellationError(error)) {
+        setStatus("idle");
+        setVoiceLevel(0);
+        setMessage({ key: "recordingCancelled" });
+        return;
+      }
+
       setStatus("error");
       setMessage(readableError(error));
     }
@@ -301,6 +334,13 @@ function App() {
 
       await startRecording();
     } catch (error) {
+      if (isCancellationError(error)) {
+        setStatus("idle");
+        setVoiceLevel(0);
+        setMessage({ key: "recordingCancelled" });
+        return;
+      }
+
       setStatus("error");
       setMessage(readableError(error));
     }
@@ -444,7 +484,7 @@ function App() {
             <Activity size={15} />
             {locale.status[status]}
           </span>
-          {status === "recording" && (
+          {isCancellable && (
             <button className="secondary-button" type="button" onClick={handleCancel}>
               {locale.ui.cancel}
             </button>
@@ -755,6 +795,13 @@ function readableError(error: unknown): AppMessage {
   }
 
   return { key: "genericError" };
+}
+
+function isCancellationError(error: unknown): boolean {
+  const message =
+    typeof error === "string" ? error : error instanceof Error ? error.message : "";
+
+  return message.toLowerCase().includes("cancelled");
 }
 
 export default App;

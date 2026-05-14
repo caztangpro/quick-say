@@ -11,6 +11,8 @@ pub enum QuickSayError {
     RecordingAlreadyActive,
     #[error("No recording is active.")]
     NoActiveRecording,
+    #[error("Dictation cancelled.")]
+    DictationCancelled,
     #[error("Recording was empty. Please try again.")]
     EmptyRecording,
     #[error("SiliconFlow API key is missing. Add it in Settings.")]

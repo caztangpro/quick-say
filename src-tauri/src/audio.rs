@@ -94,6 +94,13 @@ impl ActiveRecording {
             .clone();
         write_wav(samples, self.sample_rate, self.channels)
     }
+
+    pub fn cancel(mut self) {
+        let _ = self.stop_tx.send(());
+        if let Some(join_handle) = self.join_handle.take() {
+            let _ = join_handle.join();
+        }
+    }
 }
 
 struct RecordingInit {

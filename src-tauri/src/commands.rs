@@ -1,14 +1,16 @@
-use crate::audio::ActiveRecording;
+use crate::audio::{ActiveRecording, CapturedAudio};
 use crate::errors::{QuickSayError, QuickSayResult};
-use crate::siliconflow::SiliconFlowClient;
 use crate::paste;
+use crate::siliconflow::SiliconFlowClient;
 use crate::settings::{
     self, AppSettings, PasteBehavior, SaveSettingsPayload, SettingsPayload,
 };
 use crate::state::AppState;
 use serde::Serialize;
+use std::future::Future;
 use std::fs;
 use tauri::{AppHandle, Emitter, Manager, State};
+use tokio::sync::watch;
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -60,12 +62,22 @@ pub fn start_recording_with_state(app: AppHandle, state: &AppState) -> QuickSayR
         .recording
         .lock()
         .map_err(|_| QuickSayError::Audio("recording state lock poisoned".to_string()))?;
+    let mut cancellation = state
+        .cancellation
+        .lock()
+        .map_err(|_| QuickSayError::Audio("cancellation state lock poisoned".to_string()))?;
 
-    if recording.is_some() {
+    if recording.is_some() || cancellation.is_some() {
         return Err(QuickSayError::RecordingAlreadyActive);
     }
 
+    let (cancel_tx, _) = watch::channel(false);
     *recording = Some(ActiveRecording::start(app.clone())?);
+    *cancellation = Some(cancel_tx);
+    drop(cancellation);
+    drop(recording);
+
+    crate::register_cancel_shortcut(&app);
     crate::show_voice_overlay(&app);
     let _ = app.emit("recording_started", ());
     Ok(())
@@ -84,43 +96,110 @@ pub async fn stop_recording_with_state(app: AppHandle, state: &AppState) -> Quic
             .map_err(|_| QuickSayError::Audio("recording state lock poisoned".to_string()))?;
         recording.take().ok_or(QuickSayError::NoActiveRecording)?
     };
+    let mut cancel_rx = cancellation_receiver(state)?;
 
     let _ = app.emit("recording_stopped", ());
-    let audio = active.finish()?;
-    let settings = settings::load(&app)?;
-    let api_key = settings::load_api_key()?;
+    let audio = match active.finish() {
+        Ok(audio) => audio,
+        Err(error) => {
+            clear_active_dictation(&app, state);
+            crate::hide_voice_overlay_later(app.clone());
+            return Err(error);
+        }
+    };
+
+    if is_cancelled(&cancel_rx) {
+        complete_cancelled_dictation(&app, state, Some(&audio));
+        return Err(QuickSayError::DictationCancelled);
+    }
+
+    let settings = match settings::load(&app) {
+        Ok(settings) => settings,
+        Err(error) => {
+            remove_audio_file(&audio);
+            clear_active_dictation(&app, state);
+            crate::hide_voice_overlay_later(app.clone());
+            return Err(error);
+        }
+    };
+    let api_key = match settings::load_api_key() {
+        Ok(api_key) => api_key,
+        Err(error) => {
+            remove_audio_file(&audio);
+            clear_active_dictation(&app, state);
+            crate::hide_voice_overlay_later(app.clone());
+            return Err(error);
+        }
+    };
     let client = SiliconFlowClient::default();
 
     let _ = app.emit("transcription_progress", "transcribing");
-    let transcript = match client.transcribe(&api_key, &audio, &settings).await {
-        Ok(value) => value,
+    let transcript = match run_until_cancelled(
+        client.transcribe(&api_key, &audio, &settings),
+        &mut cancel_rx,
+    )
+    .await
+    {
+        Ok(Some(value)) => value,
+        Ok(None) => {
+            complete_cancelled_dictation(&app, state, Some(&audio));
+            return Err(QuickSayError::DictationCancelled);
+        }
         Err(error) => {
             let _ = app.emit("dictation_error", error.to_string());
+            remove_audio_file(&audio);
+            clear_active_dictation(&app, state);
             crate::hide_voice_overlay_later(app.clone());
             return Err(error);
         }
     };
 
     let _ = app.emit("transcription_progress", "polishing");
-    let polished_text = match client.polish(&api_key, &transcript.text, &settings).await {
-        Ok(value) => value,
+    let polished_text = match run_until_cancelled(
+        client.polish(&api_key, &transcript.text, &settings),
+        &mut cancel_rx,
+    )
+    .await
+    {
+        Ok(Some(value)) => value,
+        Ok(None) => {
+            complete_cancelled_dictation(&app, state, Some(&audio));
+            return Err(QuickSayError::DictationCancelled);
+        }
         Err(error) => {
             let _ = app.emit("dictation_error", error.to_string());
+            remove_audio_file(&audio);
+            clear_active_dictation(&app, state);
             crate::hide_voice_overlay_later(app.clone());
             return Err(error);
         }
     };
 
+    if is_cancelled(&cancel_rx) {
+        complete_cancelled_dictation(&app, state, Some(&audio));
+        return Err(QuickSayError::DictationCancelled);
+    }
+
     let clipboard_only = settings.paste_behavior == PasteBehavior::ClipboardOnly;
-    let outcome = paste::paste_text(
+    let outcome = match paste::paste_text(
         &app,
         &polished_text,
         settings.restore_clipboard,
         clipboard_only,
     )
-    .await?;
+    .await
+    {
+        Ok(outcome) => outcome,
+        Err(error) => {
+            remove_audio_file(&audio);
+            clear_active_dictation(&app, state);
+            crate::hide_voice_overlay_later(app.clone());
+            return Err(error);
+        }
+    };
 
-    let _ = fs::remove_file(audio.path);
+    remove_audio_file(&audio);
+    clear_active_dictation(&app, state);
 
     let result = DictationResult {
         transcript: transcript.text,
@@ -139,13 +218,35 @@ pub fn cancel_recording(app: AppHandle, state: State<AppState>) -> QuickSayResul
 }
 
 pub fn cancel_recording_with_state(app: &AppHandle, state: &AppState) -> QuickSayResult<()> {
-    let mut recording = state
-        .recording
-        .lock()
-        .map_err(|_| QuickSayError::Audio("recording state lock poisoned".to_string()))?;
-    *recording = None;
+    let active = {
+        let mut recording = state
+            .recording
+            .lock()
+            .map_err(|_| QuickSayError::Audio("recording state lock poisoned".to_string()))?;
+        recording.take()
+    };
+    request_cancellation(state)?;
+
+    if let Some(active) = active {
+        active.cancel();
+        clear_active_dictation(app, state);
+    } else {
+        crate::unregister_cancel_shortcut(app);
+    }
+
+    let _ = app.emit("dictation_cancelled", ());
     crate::hide_voice_overlay(app);
     Ok(())
+}
+
+pub fn cancel_dictation_from_shortcut(app: AppHandle) {
+    tauri::async_runtime::spawn(async move {
+        let state = app.state::<AppState>();
+        if let Err(error) = cancel_recording_with_state(&app, &state) {
+            let _ = app.emit("dictation_error", error.to_string());
+            crate::hide_voice_overlay_later(app.clone());
+        }
+    });
 }
 
 pub fn toggle_recording_from_hotkey(app: AppHandle) {
@@ -156,9 +257,16 @@ pub fn toggle_recording_from_hotkey(app: AppHandle) {
             .lock()
             .map(|recording| recording.is_some())
             .unwrap_or(false);
+        let dictation_active = state
+            .cancellation
+            .lock()
+            .map(|cancellation| cancellation.is_some())
+            .unwrap_or(false);
 
         let result = if recording_active {
             stop_recording_with_state(app.clone(), &state).await.map(|_| ())
+        } else if dictation_active {
+            cancel_recording_with_state(&app, &state)
         } else if settings::has_api_key() {
             start_recording_with_state(app.clone(), &state)
         } else {
@@ -170,10 +278,97 @@ pub fn toggle_recording_from_hotkey(app: AppHandle) {
         };
 
         if let Err(error) = result {
+            if matches!(error, QuickSayError::DictationCancelled) {
+                return;
+            }
             let _ = app.emit("dictation_error", error.to_string());
             crate::hide_voice_overlay_later(app.clone());
         }
     });
+}
+
+fn cancellation_receiver(state: &AppState) -> QuickSayResult<watch::Receiver<bool>> {
+    let cancellation = state
+        .cancellation
+        .lock()
+        .map_err(|_| QuickSayError::Audio("cancellation state lock poisoned".to_string()))?;
+
+    if let Some(cancel_tx) = cancellation.as_ref() {
+        Ok(cancel_tx.subscribe())
+    } else {
+        let (_, cancel_rx) = watch::channel(false);
+        Ok(cancel_rx)
+    }
+}
+
+fn request_cancellation(state: &AppState) -> QuickSayResult<()> {
+    let cancellation = state
+        .cancellation
+        .lock()
+        .map_err(|_| QuickSayError::Audio("cancellation state lock poisoned".to_string()))?;
+
+    if let Some(cancel_tx) = cancellation.as_ref() {
+        let _ = cancel_tx.send(true);
+    }
+
+    Ok(())
+}
+
+async fn run_until_cancelled<T, F>(
+    future: F,
+    cancel_rx: &mut watch::Receiver<bool>,
+) -> QuickSayResult<Option<T>>
+where
+    F: Future<Output = QuickSayResult<T>>,
+{
+    if is_cancelled(cancel_rx) {
+        return Ok(None);
+    }
+
+    tokio::select! {
+        result = future => result.map(Some),
+        _ = wait_for_cancellation(cancel_rx) => Ok(None),
+    }
+}
+
+async fn wait_for_cancellation(cancel_rx: &mut watch::Receiver<bool>) {
+    loop {
+        if is_cancelled(cancel_rx) {
+            return;
+        }
+
+        if cancel_rx.changed().await.is_err() {
+            return;
+        }
+    }
+}
+
+fn is_cancelled(cancel_rx: &watch::Receiver<bool>) -> bool {
+    *cancel_rx.borrow()
+}
+
+fn complete_cancelled_dictation(
+    app: &AppHandle,
+    state: &AppState,
+    audio: Option<&CapturedAudio>,
+) {
+    if let Some(audio) = audio {
+        remove_audio_file(audio);
+    }
+    clear_active_dictation(app, state);
+    let _ = app.emit("dictation_cancelled", ());
+    crate::hide_voice_overlay(app);
+}
+
+fn clear_active_dictation(app: &AppHandle, state: &AppState) {
+    if let Ok(mut cancellation) = state.cancellation.lock() {
+        *cancellation = None;
+    }
+    crate::unregister_cancel_shortcut(app);
+}
+
+fn remove_audio_file(audio: &CapturedAudio) {
+    let _ = fs::remove_file(&audio.path);
 }
 
 #[tauri::command]

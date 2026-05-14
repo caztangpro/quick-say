@@ -7,8 +7,8 @@ mod settings;
 mod state;
 
 use commands::{
-    cancel_recording, load_settings, paste_text, save_settings, start_recording, stop_recording,
-    test_provider, toggle_recording_from_hotkey,
+    cancel_dictation_from_shortcut, cancel_recording, load_settings, paste_text, save_settings,
+    start_recording, stop_recording, test_provider, toggle_recording_from_hotkey,
 };
 use state::AppState;
 use tauri::menu::{Menu, MenuItem};
@@ -151,6 +151,40 @@ pub fn hide_voice_overlay(app: &tauri::AppHandle) {
     if let Some(window) = app.get_webview_window("voice-overlay") {
         let _ = window.hide();
     }
+}
+
+#[cfg(desktop)]
+pub fn register_cancel_shortcut(app: &tauri::AppHandle) {
+    let shortcut = cancel_shortcut();
+    if app.global_shortcut().is_registered(shortcut) {
+        return;
+    }
+
+    let app_handle = app.clone();
+    let _ = app.global_shortcut().on_shortcut(shortcut, move |_app, _shortcut, event| {
+        if event.state() == ShortcutState::Pressed {
+            cancel_dictation_from_shortcut(app_handle.clone());
+        }
+    });
+}
+
+#[cfg(not(desktop))]
+pub fn register_cancel_shortcut(_app: &tauri::AppHandle) {}
+
+#[cfg(desktop)]
+pub fn unregister_cancel_shortcut(app: &tauri::AppHandle) {
+    let shortcut = cancel_shortcut();
+    if app.global_shortcut().is_registered(shortcut) {
+        let _ = app.global_shortcut().unregister(shortcut);
+    }
+}
+
+#[cfg(not(desktop))]
+pub fn unregister_cancel_shortcut(_app: &tauri::AppHandle) {}
+
+#[cfg(desktop)]
+fn cancel_shortcut() -> Shortcut {
+    Shortcut::new(None, Code::Escape)
 }
 
 #[cfg(desktop)]

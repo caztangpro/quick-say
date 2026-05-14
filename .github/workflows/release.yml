@@ -31,7 +31,6 @@ jobs:
             curl \
             file \
             libasound2-dev \
-            libappindicator3-dev \
             libayatana-appindicator3-dev \
             libdbus-1-dev \
             libglib2.0-dev \
@@ -113,7 +112,6 @@ jobs:
             curl \
             file \
             libasound2-dev \
-            libappindicator3-dev \
             libayatana-appindicator3-dev \
             libdbus-1-dev \
             libglib2.0-dev \

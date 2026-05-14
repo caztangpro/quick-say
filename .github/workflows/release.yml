@@ -30,6 +30,7 @@ jobs:
             build-essential \
             curl \
             file \
+            libasound2-dev \
             libayatana-appindicator3-dev \
             libdbus-1-dev \
             libkeyutils-dev \
@@ -106,6 +107,7 @@ jobs:
             build-essential \
             curl \
             file \
+            libasound2-dev \
             libayatana-appindicator3-dev \
             libdbus-1-dev \
             libkeyutils-dev \

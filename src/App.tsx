@@ -40,6 +40,7 @@ import { type AppMessage, getMessages, renderMessage } from "./i18n";
 import type { AppSettings, DictationResult, DictationStatus } from "./types";
 
 const WAVE_BARS = [0.22, 0.48, 0.72, 0.95, 0.64, 0.38, 0.78, 0.52, 0.28];
+const quickSayLogoUrl = new URL("./assets/quick-say-logo.png", import.meta.url).href;
 
 function getVoiceVisualLevel(status: DictationStatus, level: number) {
   const clampedLevel = Math.max(0, Math.min(1, level));
@@ -419,7 +420,7 @@ function App() {
       <section className="topbar">
         <div className="brand-lockup">
           <div className="brand-mark" aria-hidden="true">
-            <Mic size={22} />
+            <img src={quickSayLogoUrl} alt="" />
           </div>
           <div>
             <p className="eyebrow">{locale.ui.appName}</p>

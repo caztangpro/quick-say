@@ -1,35 +1,62 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="280" viewBox="0 0 960 280" role="img" aria-labelledby="title desc">
   <title id="title">Quick Say logo</title>
-  <desc id="desc">A rounded microphone mark with voice waves beside the Quick Say wordmark.</desc>
+  <desc id="desc">The Quick Say app icon beside the Quick Say wordmark and tagline.</desc>
   <defs>
-    <linearGradient id="mark-gradient" x1="54" y1="38" x2="226" y2="222" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#0f8b7a"/>
-      <stop offset="0.58" stop-color="#365f9d"/>
-      <stop offset="1" stop-color="#c56f2f"/>
+    <linearGradient id="outer-gradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#18d3c3"/>
+      <stop offset="1" stop-color="#0a8f9a"/>
     </linearGradient>
-    <linearGradient id="wave-gradient" x1="251" y1="66" x2="310" y2="214" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#59d7bf"/>
-      <stop offset="1" stop-color="#365f9d"/>
+    <linearGradient id="arrow-gradient" x1="322" y1="259" x2="452" y2="381" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffb84d"/>
+      <stop offset="1" stop-color="#ff6f55"/>
     </linearGradient>
-    <filter id="soft-shadow" x="0" y="0" width="280" height="280" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#172027" flood-opacity="0.18"/>
+    <linearGradient id="wordmark-gradient" x1="312" y1="84" x2="678" y2="167" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#05283f"/>
+      <stop offset="0.72" stop-color="#0f5169"/>
+      <stop offset="1" stop-color="#0a8f9a"/>
+    </linearGradient>
+    <clipPath id="icon-clip">
+      <rect width="512" height="512" rx="86"/>
+    </clipPath>
+    <filter id="icon-shadow" x="18" y="26" width="240" height="240" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#062438" flood-opacity="0.2"/>
+    </filter>
+    <filter id="bubble-shadow" x="56" y="126" width="344" height="302" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#031928" flood-opacity="0.22"/>
     </filter>
   </defs>
+
   <rect width="960" height="280" fill="#f8fafb"/>
-  <g filter="url(#soft-shadow)">
-    <rect x="44" y="38" width="204" height="204" rx="48" fill="url(#mark-gradient)"/>
-    <path d="M146 73c28.719 0 52 23.281 52 52v27c0 28.719-23.281 52-52 52s-52-23.281-52-52v-27c0-28.719 23.281-52 52-52Z" fill="#fff" opacity="0.96"/>
-    <path d="M118 125c0-15.464 12.536-28 28-28s28 12.536 28 28v29c0 15.464-12.536 28-28 28s-28-12.536-28-28v-29Z" fill="#0f8b7a"/>
-    <path d="M83 145c0 35.346 28.654 64 64 64s64-28.654 64-64" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
-    <path d="M146 210v21" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
-    <path d="M116 232h60" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
+
+  <g transform="translate(52 42) scale(0.3828125)" clip-path="url(#icon-clip)" filter="url(#icon-shadow)">
+    <rect width="512" height="512" fill="url(#outer-gradient)"/>
+    <rect x="22" y="22" width="468" height="468" rx="92" fill="#05283f"/>
+    <g filter="url(#bubble-shadow)">
+      <path d="M201 139h79c73 0 132 52 132 117s-59 117-132 117h-61l-63 42c-13 9-31-2-28-18l9-53c-37-21-60-53-60-88 0-65 56-117 124-117Z" fill="#f8fbfb"/>
+    </g>
+    <g fill="#11aeb4">
+      <rect x="128" y="232" width="18" height="48" rx="9"/>
+      <rect x="159" y="206" width="18" height="100" rx="9"/>
+      <rect x="190" y="226" width="18" height="60" rx="9"/>
+      <rect x="221" y="180" width="18" height="152" rx="9"/>
+      <rect x="252" y="208" width="18" height="96" rx="9"/>
+      <rect x="283" y="234" width="18" height="44" rx="9"/>
+    </g>
+    <g fill="none" stroke-linecap="round">
+      <path d="M310 294h70" stroke="#f6b84d" stroke-width="12" opacity="0.82"/>
+      <path d="M291 322h88" stroke="#f6b84d" stroke-width="12" opacity="0.68"/>
+      <path d="M312 350h66" stroke="#f6b84d" stroke-width="12" opacity="0.58"/>
+      <path d="M344 287 389 332 344 377" stroke="#05283f" stroke-width="50" stroke-linejoin="round"/>
+      <path d="M392 287 437 332 392 377" stroke="#05283f" stroke-width="50" stroke-linejoin="round"/>
+      <path d="M344 287 389 332 344 377" stroke="url(#arrow-gradient)" stroke-width="32" stroke-linejoin="round"/>
+      <path d="M392 287 437 332 392 377" stroke="url(#arrow-gradient)" stroke-width="32" stroke-linejoin="round"/>
+    </g>
   </g>
-  <g fill="none" stroke="url(#wave-gradient)" stroke-linecap="round">
-    <path d="M284 94c18 25.5 18 66.5 0 92" stroke-width="15" opacity="0.9"/>
-    <path d="M315 72c31 43.5 31 93.5 0 136" stroke-width="15" opacity="0.58"/>
-  </g>
-  <g fill="#172027">
-    <text x="368" y="132" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="72" font-weight="850" letter-spacing="0">Quick Say</text>
-    <text x="371" y="178" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="26" font-weight="650" letter-spacing="0" fill="#66737e">Voice to cursor, on your terms.</text>
+
+  <g>
+    <text x="306" y="129" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="74" font-weight="850" letter-spacing="0" fill="url(#wordmark-gradient)">Quick Say</text>
+    <text x="311" y="177" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="26" font-weight="650" letter-spacing="0" fill="#66737e">Voice to cursor, on your terms.</text>
+    <path d="M309 203h188" fill="none" stroke="#11aeb4" stroke-width="8" stroke-linecap="round"/>
+    <path d="M523 203h64" fill="none" stroke="#ff8b5f" stroke-width="8" stroke-linecap="round"/>
   </g>
 </svg>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="280" viewBox="0 0 960 280" role="img" aria-labelledby="title desc">
+  <title id="title">Quick Say logo</title>
+  <desc id="desc">A rounded microphone mark with voice waves beside the Quick Say wordmark.</desc>
+  <defs>
+    <linearGradient id="mark-gradient" x1="54" y1="38" x2="226" y2="222" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0f8b7a"/>
+      <stop offset="0.58" stop-color="#365f9d"/>
+      <stop offset="1" stop-color="#c56f2f"/>
+    </linearGradient>
+    <linearGradient id="wave-gradient" x1="251" y1="66" x2="310" y2="214" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#59d7bf"/>
+      <stop offset="1" stop-color="#365f9d"/>
+    </linearGradient>
+    <filter id="soft-shadow" x="0" y="0" width="280" height="280" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#172027" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect width="960" height="280" fill="#f8fafb"/>
+  <g filter="url(#soft-shadow)">
+    <rect x="44" y="38" width="204" height="204" rx="48" fill="url(#mark-gradient)"/>
+    <path d="M146 73c28.719 0 52 23.281 52 52v27c0 28.719-23.281 52-52 52s-52-23.281-52-52v-27c0-28.719 23.281-52 52-52Z" fill="#fff" opacity="0.96"/>
+    <path d="M118 125c0-15.464 12.536-28 28-28s28 12.536 28 28v29c0 15.464-12.536 28-28 28s-28-12.536-28-28v-29Z" fill="#0f8b7a"/>
+    <path d="M83 145c0 35.346 28.654 64 64 64s64-28.654 64-64" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
+    <path d="M146 210v21" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
+    <path d="M116 232h60" stroke="#fff" stroke-width="13" stroke-linecap="round"/>
+  </g>
+  <g fill="none" stroke="url(#wave-gradient)" stroke-linecap="round">
+    <path d="M284 94c18 25.5 18 66.5 0 92" stroke-width="15" opacity="0.9"/>
+    <path d="M315 72c31 43.5 31 93.5 0 136" stroke-width="15" opacity="0.58"/>
+  </g>
+  <g fill="#172027">
+    <text x="368" y="132" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="72" font-weight="850" letter-spacing="0">Quick Say</text>
+    <text x="371" y="178" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="26" font-weight="650" letter-spacing="0" fill="#66737e">Voice to cursor, on your terms.</text>
+  </g>
+</svg>

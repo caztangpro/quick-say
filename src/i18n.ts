@@ -9,13 +9,20 @@ export interface LocaleMessages {
     settings: string;
     apiKey: string;
     apiKeyStored: string;
+    apiKeyReady: string;
+    apiKeyMissing: string;
     hotkey: string;
     interfaceLanguage: string;
     dictationLanguage: string;
+    dictation: string;
     customLanguage: string;
     transcriptionModel: string;
     polishModel: string;
+    connection: string;
+    voiceAndLanguage: string;
+    modelsAndOutput: string;
     polishToggle: string;
+    darkMode: string;
     restoreClipboard: string;
     historyToggle: string;
     pasteBehavior: string;
@@ -32,6 +39,17 @@ export interface LocaleMessages {
     stopRecording: string;
     resetHotkey: string;
     pressKeys: string;
+    switchToLightMode: string;
+    switchToDarkMode: string;
+    workflow: string;
+    workflowCue: string;
+    workflowCapture: string;
+    workflowRefine: string;
+    workflowPlace: string;
+    voiceIntensity: string;
+    voiceIntensityQuiet: string;
+    voiceIntensityClear: string;
+    voiceIntensityStrong: string;
   };
   uiLanguage: Record<UiLanguage, string>;
   dictationLanguage: Record<LanguageMode, string>;
@@ -85,13 +103,20 @@ const LOCALES: Record<UiLanguage, LocaleMessages> = {
       settings: "Settings",
       apiKey: "SiliconFlow API key",
       apiKeyStored: "Stored in OS keyring",
+      apiKeyReady: "Key secured",
+      apiKeyMissing: "Key needed",
       hotkey: "Hotkey",
       interfaceLanguage: "Interface language",
       dictationLanguage: "Dictation language",
+      dictation: "Dictation",
       customLanguage: "Custom language",
       transcriptionModel: "Transcription model",
       polishModel: "Polish model",
+      connection: "Connection",
+      voiceAndLanguage: "Voice & language",
+      modelsAndOutput: "Models & output",
       polishToggle: "Polish punctuation and casing",
+      darkMode: "Dark mode",
       restoreClipboard: "Restore clipboard after paste",
       historyToggle: "Keep local text history",
       pasteBehavior: "Paste behavior",
@@ -108,6 +133,17 @@ const LOCALES: Record<UiLanguage, LocaleMessages> = {
       stopRecording: "Stop recording",
       resetHotkey: "Reset hotkey",
       pressKeys: "Press keys",
+      switchToLightMode: "Switch to light mode",
+      switchToDarkMode: "Switch to dark mode",
+      workflow: "Dictation workflow",
+      workflowCue: "Cue",
+      workflowCapture: "Capture",
+      workflowRefine: "Refine",
+      workflowPlace: "Place",
+      voiceIntensity: "Intensity",
+      voiceIntensityQuiet: "Quiet",
+      voiceIntensityClear: "Clear",
+      voiceIntensityStrong: "Strong",
     },
     uiLanguage: {
       en: "English",
@@ -166,13 +202,20 @@ const LOCALES: Record<UiLanguage, LocaleMessages> = {
       settings: "设置",
       apiKey: "SiliconFlow API 密钥",
       apiKeyStored: "已存入系统钥匙串",
+      apiKeyReady: "密钥已保护",
+      apiKeyMissing: "需要密钥",
       hotkey: "快捷键",
       interfaceLanguage: "界面语言",
       dictationLanguage: "听写语言",
+      dictation: "听写",
       customLanguage: "自定义语言",
       transcriptionModel: "转写模型",
       polishModel: "润色模型",
+      connection: "连接",
+      voiceAndLanguage: "语音和语言",
+      modelsAndOutput: "模型和输出",
       polishToggle: "润色标点和大小写",
+      darkMode: "深色模式",
       restoreClipboard: "粘贴后恢复剪贴板",
       historyToggle: "保留本地文本历史",
       pasteBehavior: "粘贴方式",
@@ -189,6 +232,17 @@ const LOCALES: Record<UiLanguage, LocaleMessages> = {
       stopRecording: "停止录音",
       resetHotkey: "重置快捷键",
       pressKeys: "按下按键",
+      switchToLightMode: "切换到浅色模式",
+      switchToDarkMode: "切换到深色模式",
+      workflow: "听写流程",
+      workflowCue: "触发",
+      workflowCapture: "采集",
+      workflowRefine: "整理",
+      workflowPlace: "放置",
+      voiceIntensity: "语音强度",
+      voiceIntensityQuiet: "偏弱",
+      voiceIntensityClear: "清晰",
+      voiceIntensityStrong: "偏强",
     },
     uiLanguage: {
       en: "English",

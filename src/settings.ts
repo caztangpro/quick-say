@@ -3,6 +3,7 @@ import type { AppSettings } from "./types";
 export const DEFAULT_SETTINGS: AppSettings = {
   hotkey: "CommandOrControl+Shift+Space",
   uiLanguage: "en",
+  themeMode: "light",
   transcriptionModel: "FunAudioLLM/SenseVoiceSmall",
   polishModel: "Qwen/Qwen2.5-7B-Instruct",
   polishEnabled: true,
@@ -76,6 +77,7 @@ export function normalizeSettings(input: Partial<AppSettings>): AppSettings {
     ...input,
     hotkey: input.hotkey?.trim() || DEFAULT_SETTINGS.hotkey,
     uiLanguage: isUiLanguage(input.uiLanguage) ? input.uiLanguage : DEFAULT_SETTINGS.uiLanguage,
+    themeMode: isThemeMode(input.themeMode) ? input.themeMode : DEFAULT_SETTINGS.themeMode,
     transcriptionModel:
       migratedTranscriptionModel?.trim() || DEFAULT_SETTINGS.transcriptionModel,
     polishModel: migratedPolishModel?.trim() || DEFAULT_SETTINGS.polishModel,
@@ -177,4 +179,8 @@ function normalizeHotkeyKey(event: HotkeyKeyboardEvent): string | null {
 
 function isUiLanguage(value: unknown): value is AppSettings["uiLanguage"] {
   return value === "en" || value === "zh";
+}
+
+function isThemeMode(value: unknown): value is AppSettings["themeMode"] {
+  return value === "light" || value === "dark";
 }

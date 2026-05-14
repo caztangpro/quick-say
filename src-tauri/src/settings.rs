@@ -14,6 +14,8 @@ pub struct AppSettings {
     pub hotkey: String,
     #[serde(default = "default_ui_language")]
     pub ui_language: UiLanguage,
+    #[serde(default = "default_theme_mode")]
+    pub theme_mode: ThemeMode,
     pub transcription_model: String,
     pub polish_model: String,
     pub polish_enabled: bool,
@@ -30,6 +32,13 @@ pub struct AppSettings {
 pub enum UiLanguage {
     En,
     Zh,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum ThemeMode {
+    Light,
+    Dark,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -69,6 +78,7 @@ impl Default for AppSettings {
         Self {
             hotkey: "CommandOrControl+Shift+Space".to_string(),
             ui_language: UiLanguage::En,
+            theme_mode: ThemeMode::Light,
             transcription_model: "FunAudioLLM/SenseVoiceSmall".to_string(),
             polish_model: "Qwen/Qwen2.5-7B-Instruct".to_string(),
             polish_enabled: true,
@@ -84,6 +94,10 @@ impl Default for AppSettings {
 
 fn default_ui_language() -> UiLanguage {
     UiLanguage::En
+}
+
+fn default_theme_mode() -> ThemeMode {
+    ThemeMode::Light
 }
 
 pub fn load(app: &AppHandle) -> QuickSayResult<AppSettings> {
@@ -166,6 +180,7 @@ mod tests {
         assert_eq!(settings.transcription_model, "FunAudioLLM/SenseVoiceSmall");
         assert_eq!(settings.polish_model, "Qwen/Qwen2.5-7B-Instruct");
         assert_eq!(settings.ui_language, UiLanguage::En);
+        assert_eq!(settings.theme_mode, ThemeMode::Light);
         assert!(settings.polish_enabled);
         assert!(!settings.history_enabled);
     }
@@ -201,5 +216,6 @@ mod tests {
         .expect("settings without uiLanguage should still load");
 
         assert_eq!(settings.ui_language, UiLanguage::En);
+        assert_eq!(settings.theme_mode, ThemeMode::Light);
     }
 }

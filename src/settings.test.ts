@@ -36,6 +36,14 @@ describe("settings validation", () => {
     ).toBe("en");
   });
 
+  it("normalizes invalid theme mode to light", () => {
+    expect(
+      normalizeSettings({
+        themeMode: "sepia" as AppSettings["themeMode"],
+      }).themeMode,
+    ).toBe("light");
+  });
+
   it("requires a modifier-style hotkey", () => {
     expect(validateSettings({ ...DEFAULT_SETTINGS, hotkey: "Space" })).toContain(
       "Hotkey must include a modifier and a key.",

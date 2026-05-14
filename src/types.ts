@@ -9,10 +9,12 @@ export type DictationStatus =
 export type PasteBehavior = "auto" | "clipboard_only";
 export type LanguageMode = "auto" | "english" | "chinese" | "japanese" | "spanish" | "custom";
 export type UiLanguage = "en" | "zh";
+export type ThemeMode = "light" | "dark";
 
 export interface AppSettings {
   hotkey: string;
   uiLanguage: UiLanguage;
+  themeMode: ThemeMode;
   transcriptionModel: string;
   polishModel: string;
   polishEnabled: boolean;

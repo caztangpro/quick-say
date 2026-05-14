@@ -1,0 +1,36 @@
+[package]
+name = "quick-say"
+version = "0.1.0"
+description = "Free personal desktop dictation"
+authors = ["Quick Say contributors"]
+edition = "2021"
+license = "MIT"
+rust-version = "1.77.2"
+
+[lib]
+name = "quick_say_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[[bin]]
+name = "quick-say"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+cpal = "0.15"
+hound = "3.5"
+keyring = { version = "3.6.3", features = ["apple-native", "windows-native", "linux-native-sync-persistent", "crypto-rust"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "multipart", "rustls-tls"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-clipboard-manager = "2"
+tauri-plugin-global-shortcut = "2"
+tempfile = "3.13"
+thiserror = "2"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "time"] }
+
+[dev-dependencies]
+httpmock = "0.7"

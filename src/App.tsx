@@ -8,7 +8,9 @@ import {
   Keyboard,
   Languages,
   Loader2,
+  Maximize2,
   Mic,
+  Minus,
   Moon,
   PlugZap,
   RotateCcw,
@@ -19,8 +21,10 @@ import {
   Square,
   Sun,
   Wand2,
+  X,
 } from "lucide-react";
 import { listen } from "@tauri-apps/api/event";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
   cancelRecording,
   isTauriRuntime,
@@ -416,39 +420,18 @@ function App() {
   }
 
   return (
-    <main className="shell">
-      <section className="topbar">
-        <div className="brand-lockup">
-          <div className="brand-mark" aria-hidden="true">
-            <img src={quickSayLogoUrl} alt="" />
-          </div>
-          <div>
-            <p className="eyebrow">{locale.ui.appName}</p>
-            <h1>{locale.ui.title}</h1>
-          </div>
-        </div>
-        <div className="topbar-actions">
-          <button
-            className="theme-switch"
-            type="button"
-            onClick={toggleThemeMode}
-            aria-label={themeToggleLabel}
-            aria-pressed={isDarkMode}
-            title={themeToggleLabel}
-          >
-            {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-          <div className={`credential ${hasCredential ? "is-ready" : "is-missing"}`}>
-            <ShieldCheck size={17} />
-            <span>{hasCredential ? locale.ui.apiKeyReady : locale.ui.apiKeyMissing}</span>
-          </div>
-          <div className={`status status-${status}`}>
-            {status === "recording" ? <Mic size={18} /> : status === "error" ? <AlertCircle size={18} /> : isProcessing ? <Loader2 className="spin" size={18} /> : <Check size={18} />}
-            <span>{locale.status[status]}</span>
-          </div>
-        </div>
-      </section>
+    <div className="app-frame">
+      <WindowTitleBar
+        locale={locale}
+        status={status}
+        hasCredential={hasCredential}
+        isDarkMode={isDarkMode}
+        isProcessing={isProcessing}
+        themeToggleLabel={themeToggleLabel}
+        onToggleTheme={toggleThemeMode}
+      />
 
+      <main className="shell">
       <section className={`dictation-panel dictation-panel-${status}`} style={voiceStyle} aria-live="polite">
         <div className="record-stage">
           <span className="record-halo" aria-hidden="true" />
@@ -720,7 +703,123 @@ function App() {
           )}
         </section>
       </div>
-    </main>
+      </main>
+    </div>
+  );
+}
+
+interface WindowTitleBarProps {
+  locale: ReturnType<typeof getMessages>;
+  status: DictationStatus;
+  hasCredential: boolean;
+  isDarkMode: boolean;
+  isProcessing: boolean;
+  themeToggleLabel: string;
+  onToggleTheme: () => void;
+}
+
+function WindowTitleBar({
+  locale,
+  status,
+  hasCredential,
+  isDarkMode,
+  isProcessing,
+  themeToggleLabel,
+  onToggleTheme,
+}: WindowTitleBarProps) {
+  const showWindowControls = isTauriRuntime();
+
+  function runWindowAction(action: (window: ReturnType<typeof getCurrentWindow>) => Promise<void>) {
+    if (!showWindowControls) {
+      return;
+    }
+
+    void action(getCurrentWindow()).catch(() => undefined);
+  }
+
+  const statusIcon =
+    status === "recording" ? (
+      <Mic size={16} />
+    ) : status === "error" ? (
+      <AlertCircle size={16} />
+    ) : isProcessing ? (
+      <Loader2 className="spin" size={16} />
+    ) : (
+      <Check size={16} />
+    );
+
+  return (
+    <header className="window-titlebar">
+      <div
+        className="window-titlebar-drag"
+        data-tauri-drag-region=""
+        onDoubleClick={() => runWindowAction((window) => window.toggleMaximize())}
+      >
+        <div className="window-titlebar-brand" data-tauri-drag-region="">
+          <span className="titlebar-mark" data-tauri-drag-region="" aria-hidden="true">
+            <img src={quickSayLogoUrl} alt="" data-tauri-drag-region="" />
+          </span>
+          <span className="window-titlebar-name" data-tauri-drag-region="">
+            {locale.ui.appName}
+          </span>
+        </div>
+        <div className="window-titlebar-center" data-tauri-drag-region="">
+          <span data-tauri-drag-region="">{locale.ui.title}</span>
+        </div>
+      </div>
+
+      <div className="window-titlebar-actions">
+        <button
+          className="theme-switch"
+          type="button"
+          onClick={onToggleTheme}
+          aria-label={themeToggleLabel}
+          aria-pressed={isDarkMode}
+          title={themeToggleLabel}
+        >
+          {isDarkMode ? <Sun size={17} /> : <Moon size={17} />}
+        </button>
+        <div className={`credential ${hasCredential ? "is-ready" : "is-missing"}`}>
+          <ShieldCheck size={16} />
+          <span>{hasCredential ? locale.ui.apiKeyReady : locale.ui.apiKeyMissing}</span>
+        </div>
+        <div className={`status status-${status}`}>
+          {statusIcon}
+          <span>{locale.status[status]}</span>
+        </div>
+        {showWindowControls && (
+          <div className="window-controls" aria-label={locale.ui.windowControls}>
+            <button
+              className="window-control"
+              type="button"
+              onClick={() => runWindowAction((window) => window.minimize())}
+              aria-label={locale.ui.minimizeWindow}
+              title={locale.ui.minimizeWindow}
+            >
+              <Minus size={16} />
+            </button>
+            <button
+              className="window-control"
+              type="button"
+              onClick={() => runWindowAction((window) => window.toggleMaximize())}
+              aria-label={locale.ui.toggleMaximizeWindow}
+              title={locale.ui.toggleMaximizeWindow}
+            >
+              <Maximize2 size={14} />
+            </button>
+            <button
+              className="window-control window-control-close"
+              type="button"
+              onClick={() => runWindowAction((window) => window.hide())}
+              aria-label={locale.ui.hideWindow}
+              title={locale.ui.hideWindow}
+            >
+              <X size={16} />
+            </button>
+          </div>
+        )}
+      </div>
+    </header>
   );
 }
 

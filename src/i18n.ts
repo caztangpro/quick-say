@@ -41,6 +41,10 @@ export interface LocaleMessages {
     pressKeys: string;
     switchToLightMode: string;
     switchToDarkMode: string;
+    windowControls: string;
+    minimizeWindow: string;
+    toggleMaximizeWindow: string;
+    hideWindow: string;
     workflow: string;
     workflowCue: string;
     workflowCapture: string;
@@ -135,6 +139,10 @@ const LOCALES: Record<UiLanguage, LocaleMessages> = {
       pressKeys: "Press keys",
       switchToLightMode: "Switch to light mode",
       switchToDarkMode: "Switch to dark mode",
+      windowControls: "Window controls",
+      minimizeWindow: "Minimize window",
+      toggleMaximizeWindow: "Toggle maximize",
+      hideWindow: "Hide to tray",
       workflow: "Dictation workflow",
       workflowCue: "Cue",
       workflowCapture: "Capture",
@@ -234,6 +242,10 @@ const LOCALES: Record<UiLanguage, LocaleMessages> = {
       pressKeys: "按下按键",
       switchToLightMode: "切换到浅色模式",
       switchToDarkMode: "切换到深色模式",
+      windowControls: "窗口控制",
+      minimizeWindow: "最小化窗口",
+      toggleMaximizeWindow: "切换最大化",
+      hideWindow: "隐藏到托盘",
       workflow: "听写流程",
       workflowCue: "触发",
       workflowCapture: "采集",

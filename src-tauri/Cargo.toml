@@ -1,6 +1,6 @@
 [package]
 name = "quick-say"
-version = "0.1.4"
+version = "0.1.5"
 description = "Free personal desktop dictation"
 authors = ["Quick Say contributors"]
 edition = "2021"

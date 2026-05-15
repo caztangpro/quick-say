@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quick Say - Local-first desktop dictation</title>
+    <meta
+      name="description"
+      content="Quick Say is a free, local-first desktop dictation app. Press a global hotkey, speak naturally, and paste polished text anywhere."
+    >
+    <meta name="theme-color" content="#05283f">
+    <link rel="canonical" href="https://quicksay.caztang.com/">
+    <link rel="alternate" hreflang="en" href="https://quicksay.caztang.com/?lang=en">
+    <link rel="alternate" hreflang="zh-Hans" href="https://quicksay.caztang.com/?lang=zh">
+    <link rel="alternate" hreflang="x-default" href="https://quicksay.caztang.com/">
+    <link rel="icon" href="./assets/quick-say-logo.svg" type="image/svg+xml">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Quick Say">
+    <meta property="og:title" content="Quick Say - Local-first desktop dictation">
+    <meta
+      property="og:description"
+      content="Press a global hotkey, speak naturally, and Quick Say transcribes, optionally polishes, then pastes the text where you are working."
+    >
+    <meta property="og:url" content="https://quicksay.caztang.com/">
+    <meta property="og:image" content="https://quicksay.caztang.com/assets/quick-say-screenshot.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="#top" aria-label="Quick Say home">
+        <img src="./assets/quick-say-logo.svg" alt="" width="40" height="40">
+        <span>Quick Say</span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" data-nav-toggle>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="site-nav" aria-label="Primary navigation" data-nav>
+        <a href="#privacy">Privacy</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#setup">Setup</a>
+        <div class="language-switch" role="group" aria-label="Language" data-language-switch>
+          <button class="is-active" type="button" data-language-option="en" aria-pressed="true">EN</button>
+          <button type="button" data-language-option="zh" aria-pressed="false">中文</button>
+        </div>
+        <a class="nav-cta" href="https://github.com/caztangpro/quick-say" target="_blank" rel="noreferrer">
+          GitHub source
+        </a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <img
+          class="hero__image"
+          src="./assets/quick-say-screenshot.png"
+          alt="Quick Say desktop app window showing dictation controls and settings"
+          width="1225"
+          height="1291"
+          fetchpriority="high"
+        >
+        <div class="hero__scrim" aria-hidden="true"></div>
+        <div class="hero__content">
+          <p class="eyebrow reveal">Free desktop dictation for your own workflow</p>
+          <h1 id="hero-title" class="reveal">Talk anywhere. Keep the keys to yourself.</h1>
+          <p class="hero__lede reveal">
+            Quick Say turns a global hotkey into polished text at your cursor. It runs as a compact
+            Tauri desktop app, stores settings locally, and uses your own SiliconFlow API key.
+          </p>
+
+          <div class="hero__actions reveal" aria-label="Primary actions">
+            <a class="button button--primary" href="https://github.com/caztangpro/quick-say" target="_blank" rel="noreferrer">
+              <span>Get the source</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M5 12h14"></path>
+                <path d="m13 6 6 6-6 6"></path>
+              </svg>
+            </a>
+            <a class="button button--ghost" href="#workflow">
+              <span>See the flow</span>
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="proof-strip" aria-label="Quick Say promise">
+        <div class="proof-strip__inner">
+          <p><strong>Hotkey</strong> CommandOrControl+Shift+Space.</p>
+          <p><strong>Store</strong> settings locally and keys in the OS keyring.</p>
+          <p><strong>Paste</strong> polished text without changing context.</p>
+        </div>
+      </section>
+
+      <section class="section section--light" aria-labelledby="why-title">
+        <div class="section__header reveal">
+          <p class="eyebrow">Why it exists</p>
+          <h2 id="why-title">A voice tool that behaves like a personal utility.</h2>
+          <p>
+            Quick Say is built for people who want the speed of dictation without signing into
+            another hosted writing product.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card reveal">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M12 3v18"></path>
+              <path d="M7 8v8"></path>
+              <path d="M17 8v8"></path>
+              <path d="M3 11v2"></path>
+              <path d="M21 11v2"></path>
+            </svg>
+            <h3>Fast capture</h3>
+            <p>Start dictation from the keyboard or microphone button, then return to the app you were using.</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6l-7-3Z"></path>
+              <path d="m9 12 2 2 4-5"></path>
+            </svg>
+            <h3>Local-first privacy</h3>
+            <p>Preferences stay on-device, API keys go to the OS keyring, and temporary WAV files are cleaned up.</p>
+          </article>
+
+          <article class="feature-card reveal">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M5 5h14v14H5z"></path>
+              <path d="M8 10h8"></path>
+              <path d="M8 14h5"></path>
+              <path d="M15 17l4 4"></path>
+            </svg>
+            <h3>Text that lands cleanly</h3>
+            <p>Use transcription only, or let the polish step turn spoken thoughts into ready-to-paste text.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section--dark" id="workflow" aria-labelledby="workflow-title">
+        <div class="workflow-layout">
+          <div class="section__header section__header--left reveal">
+            <p class="eyebrow">Workflow</p>
+            <h2 id="workflow-title">A small loop for everyday writing.</h2>
+            <p>
+              Quick Say keeps the main path short: capture voice, transcribe it, polish when useful,
+              and send the result to your clipboard or active cursor.
+            </p>
+          </div>
+
+          <div class="flow-demo reveal" aria-label="Animated dictation workflow">
+            <div class="flow-demo__toolbar">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="flow-demo__body">
+              <div class="voice-meter" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <p class="flow-demo__status" data-flow-status aria-live="polite">Listening for speech</p>
+              <p class="flow-demo__text" data-flow-text>
+                Draft the release note for Quick Say and keep the tone calm.
+              </p>
+              <button class="button button--small" type="button" data-replay-flow>
+                Replay flow
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ol class="timeline" aria-label="Quick Say workflow steps">
+          <li class="timeline__item reveal" data-flow-step>
+            <span>01</span>
+            <h3>Press the global hotkey</h3>
+            <p>Use CommandOrControl+Shift+Space, or start from the compact app window.</p>
+          </li>
+          <li class="timeline__item reveal" data-flow-step>
+            <span>02</span>
+            <h3>Speak naturally</h3>
+            <p>Audio is recorded temporarily, sent for transcription, then removed after processing.</p>
+          </li>
+          <li class="timeline__item reveal" data-flow-step>
+            <span>03</span>
+            <h3>Paste or copy</h3>
+            <p>Auto paste into the active app, or use clipboard-only mode when that is better.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="section section--light product-section" aria-labelledby="product-title">
+        <div class="section__header reveal">
+          <p class="eyebrow">Desktop app</p>
+          <h2 id="product-title">Compact controls, visible settings, no account bundle.</h2>
+          <p>
+            The app is intentionally plain-spoken: set your provider key, choose the model defaults,
+            pick paste behavior, and dictate when you need it.
+          </p>
+        </div>
+
+        <figure class="product-shot reveal">
+          <div class="product-shot__frame">
+            <div class="product-shot__chrome" aria-hidden="true">
+              <span class="product-shot__lights">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+              <span class="product-shot__title">Quick Say desktop preview</span>
+              <span class="product-shot__status">Source build</span>
+            </div>
+            <div class="product-shot__viewport">
+              <img
+                src="./assets/quick-say-screenshot.png"
+                alt="Quick Say application interface showing global hotkey dictation, provider settings, and the last dictation panel"
+                width="1225"
+                height="1291"
+                loading="lazy"
+              >
+            </div>
+          </div>
+          <figcaption>Current early-development interface, framed around the main dictation path.</figcaption>
+          <ul class="product-shot__notes" aria-label="Screenshot highlights">
+            <li>
+              <span>01</span>
+              <strong>Hotkey-first</strong>
+              <p>Start capture from anywhere.</p>
+            </li>
+            <li>
+              <span>02</span>
+              <strong>Visible settings</strong>
+              <p>Models and paste behavior stay easy to inspect.</p>
+            </li>
+            <li>
+              <span>03</span>
+              <strong>Local control</strong>
+              <p>Bring your own key, no bundled account.</p>
+            </li>
+          </ul>
+        </figure>
+      </section>
+
+      <section class="section section--cream" id="privacy" aria-labelledby="privacy-title">
+        <div class="section__header reveal">
+          <p class="eyebrow">Privacy model</p>
+          <h2 id="privacy-title">Private by architecture, clear about provider calls.</h2>
+          <p>
+            Quick Say does not run a hosted backend or include a shared API account. Transcription
+            and polishing still use your configured SiliconFlow account.
+          </p>
+        </div>
+
+        <div class="privacy-grid">
+          <article class="privacy-card reveal">
+            <h3>Your key stays out of project files</h3>
+            <p>API keys belong in the operating system keyring, not in logs or plaintext config.</p>
+          </article>
+          <article class="privacy-card reveal">
+            <h3>Temporary audio is temporary</h3>
+            <p>Raw audio is only kept long enough to complete the dictation request, including error paths.</p>
+          </article>
+          <article class="privacy-card reveal">
+            <h3>No Quick Say telemetry</h3>
+            <p>The project avoids analytics, tracking, bundled accounts, and hosted app services.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section--light" id="setup" aria-labelledby="setup-title">
+        <div class="setup-layout">
+          <div class="section__header section__header--left reveal">
+            <p class="eyebrow">From source</p>
+            <h2 id="setup-title">Run it locally while packaged releases mature.</h2>
+            <p>
+              Quick Say is early, but the core flow works from source for contributors and curious users.
+            </p>
+          </div>
+
+          <div class="setup-card reveal">
+            <ol>
+              <li>Install Node.js, pnpm 9.14.2, Rust, and Tauri v2 system dependencies.</li>
+              <li>Clone the repository and run <code>pnpm install</code>.</li>
+              <li>Start the desktop app with <code>pnpm tauri:dev</code>.</li>
+              <li>Add your SiliconFlow API key in Settings, then press the hotkey.</li>
+            </ol>
+            <a class="button button--primary" href="https://github.com/caztangpro/quick-say#quick-say" target="_blank" rel="noreferrer">
+              <span>Open README</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M5 12h14"></path>
+                <path d="m13 6 6 6-6 6"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="final-cta" aria-labelledby="final-title">
+        <div class="final-cta__inner reveal">
+          <p class="eyebrow">Quick Say</p>
+          <h2 id="final-title">A dictation app you can inspect, run, and keep personal.</h2>
+          <a class="button button--primary" href="https://github.com/caztangpro/quick-say" target="_blank" rel="noreferrer">
+            <span>View project on GitHub</span>
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M5 12h14"></path>
+              <path d="m13 6 6 6-6 6"></path>
+            </svg>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Quick Say is released under the MIT License.</p>
+      <a href="https://github.com/caztangpro/quick-say" target="_blank" rel="noreferrer">GitHub</a>
+    </footer>
+  </body>
+</html>

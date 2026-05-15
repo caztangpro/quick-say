@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Quick Say app icon</title>
+  <desc id="desc">A speech bubble with a waveform and fast-forward arrows for the Quick Say desktop dictation app.</desc>
+  <defs>
+    <linearGradient id="outer-gradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#18d3c3"/>
+      <stop offset="1" stop-color="#0a8f9a"/>
+    </linearGradient>
+    <linearGradient id="arrow-gradient" x1="322" y1="259" x2="452" y2="381" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffb84d"/>
+      <stop offset="1" stop-color="#ff6f55"/>
+    </linearGradient>
+    <filter id="card-shadow" x="-40" y="-32" width="592" height="592" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="20" stdDeviation="20" flood-color="#032033" flood-opacity="0.24"/>
+    </filter>
+    <filter id="bubble-shadow" x="56" y="126" width="344" height="302" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#031928" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" fill="url(#outer-gradient)"/>
+  <rect x="22" y="22" width="468" height="468" rx="92" fill="#05283f" filter="url(#card-shadow)"/>
+
+  <g filter="url(#bubble-shadow)">
+    <path d="M201 139h79c73 0 132 52 132 117s-59 117-132 117h-61l-63 42c-13 9-31-2-28-18l9-53c-37-21-60-53-60-88 0-65 56-117 124-117Z" fill="#f8fbfb"/>
+  </g>
+
+  <g fill="#11aeb4">
+    <rect x="128" y="232" width="18" height="48" rx="9"/>
+    <rect x="159" y="206" width="18" height="100" rx="9"/>
+    <rect x="190" y="226" width="18" height="60" rx="9"/>
+    <rect x="221" y="180" width="18" height="152" rx="9"/>
+    <rect x="252" y="208" width="18" height="96" rx="9"/>
+    <rect x="283" y="234" width="18" height="44" rx="9"/>
+  </g>
+
+  <g fill="none" stroke-linecap="round">
+    <path d="M310 294h70" stroke="#f6b84d" stroke-width="12" opacity="0.82"/>
+    <path d="M291 322h88" stroke="#f6b84d" stroke-width="12" opacity="0.68"/>
+    <path d="M312 350h66" stroke="#f6b84d" stroke-width="12" opacity="0.58"/>
+    <path d="M344 287 389 332 344 377" stroke="#05283f" stroke-width="50" stroke-linejoin="round"/>
+    <path d="M392 287 437 332 392 377" stroke="#05283f" stroke-width="50" stroke-linejoin="round"/>
+    <path d="M344 287 389 332 344 377" stroke="url(#arrow-gradient)" stroke-width="32" stroke-linejoin="round"/>
+    <path d="M392 287 437 332 392 377" stroke="url(#arrow-gradient)" stroke-width="32" stroke-linejoin="round"/>
+  </g>
+</svg>

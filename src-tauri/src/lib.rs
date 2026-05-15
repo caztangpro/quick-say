@@ -242,8 +242,13 @@ fn create_tray(app: &tauri::AppHandle) -> tauri::Result<()> {
     let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
     let menu = Menu::with_items(app, &[&show, &start, &quit])?;
     let window_app = app.clone();
+    let tray_icon = app
+        .default_window_icon()
+        .cloned()
+        .expect("Quick Say should have a bundled window icon");
 
     TrayIconBuilder::with_id("quick-say-tray")
+        .icon(tray_icon)
         .tooltip("Quick Say")
         .menu(&menu)
         .on_menu_event(move |app, event| match event.id().as_ref() {

@@ -2,6 +2,10 @@
 
 Guidance for AI agents working in this repository.
 
+## Scope
+
+These instructions apply to the current project at `D:\code\quick-say` and all files under this repository unless a more specific nested `AGENTS.md` says otherwise.
+
 ## Project Snapshot
 
 Quick Say is a free personal desktop dictation app. It uses a React/Vite frontend inside a Tauri v2 desktop shell. Users provide their own SiliconFlow API key; settings are local, API keys belong in the OS keyring, and temporary audio should not outlive the dictation request.
@@ -14,7 +18,7 @@ Core stack:
 
 ## Documentation Lookups
 
-Use Context7 MCP to fetch current documentation whenever the user asks about a library, framework, SDK, API, CLI tool, or cloud service, including React, Vite, Tauri, Vitest, pnpm, Rust crates, or SiliconFlow/OpenAI-compatible APIs.
+Use Context7 MCP to fetch current documentation whenever the user asks about a library, framework, SDK, API, CLI tool, or cloud service, including well-known technologies such as React, Vite, Tauri, Vitest, pnpm, Rust crates, or SiliconFlow/OpenAI-compatible APIs. Use Context7 even when the answer seems familiar, because API syntax, setup steps, and migration guidance may have changed.
 
 Do not use Context7 for refactoring, writing scripts from scratch, debugging business logic, code review, or general programming concepts.
 

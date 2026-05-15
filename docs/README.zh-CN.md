@@ -3,7 +3,7 @@
 [English](../README.md)
 
 <p align="center">
-  <img src="assets/quick-say-logo.svg" alt="Quick Say logo" width="560">
+  <img src="assets/quick-say-logo.svg" alt="Quick Say logo" width="144">
 </p>
 
 Quick Say 是一款免费、本地优先的桌面听写应用。按下全局快捷键，

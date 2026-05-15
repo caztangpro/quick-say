@@ -3,7 +3,7 @@
 [简体中文](docs/README.zh-CN.md)
 
 <p align="center">
-  <img src="docs/assets/quick-say-logo.svg" alt="Quick Say logo" width="560">
+  <img src="docs/assets/quick-say-logo.svg" alt="Quick Say logo" width="144">
 </p>
 
 Quick Say is a free, local-first desktop dictation app. Press a global hotkey,

@@ -42,32 +42,10 @@ import {
 } from "./settings";
 import { type AppMessage, getMessages, renderMessage } from "./i18n";
 import type { AppSettings, DictationResult, DictationStatus } from "./types";
+import { clampVoiceLevel, getRecordingDisplayLevel, getVoiceVisualLevel } from "./voiceLevel";
 
 const WAVE_BARS = [0.22, 0.48, 0.72, 0.95, 0.64, 0.38, 0.78, 0.52, 0.28];
 const quickSayLogoUrl = new URL("./assets/quick-say-logo.png", import.meta.url).href;
-
-function getVoiceVisualLevel(status: DictationStatus, level: number) {
-  const clampedLevel = Math.max(0, Math.min(1, level));
-  const isWorking = status === "transcribing" || status === "polishing";
-
-  if (status === "recording") {
-    return Math.max(clampedLevel, 0.06);
-  }
-
-  if (isWorking) {
-    return 0.28;
-  }
-
-  if (status === "pasted") {
-    return 0.18;
-  }
-
-  if (status === "error") {
-    return 0.2;
-  }
-
-  return 0.08;
-}
 
 function getVoiceStyle(status: DictationStatus, level: number): CSSProperties {
   const visualLevel = getVoiceVisualLevel(status, level);
@@ -89,11 +67,13 @@ function getVoiceIntensityLabel(
     return locale.status[status];
   }
 
-  if (level < 0.18) {
+  const displayLevel = getRecordingDisplayLevel(level);
+
+  if (displayLevel < 0.3) {
     return locale.ui.voiceIntensityQuiet;
   }
 
-  if (level < 0.62) {
+  if (displayLevel < 0.78) {
     return locale.ui.voiceIntensityClear;
   }
 
@@ -221,7 +201,7 @@ function App() {
         setMessage({ key: "recordingCancelled" });
       }),
       listen<number>("voice_level", (event) => {
-        setVoiceLevel(Math.max(0, Math.min(1, event.payload)));
+        setVoiceLevel(clampVoiceLevel(event.payload));
       }),
     ];
 
@@ -863,8 +843,7 @@ interface VoiceWaveProps {
 }
 
 function VoiceWave({ status, level, compact = false }: VoiceWaveProps) {
-  const isWorking = status === "transcribing" || status === "polishing";
-  const displayLevel = status === "recording" ? Math.max(level, 0.06) : isWorking ? 0.28 : 0.08;
+  const displayLevel = getVoiceVisualLevel(status, level);
 
   return (
     <div
